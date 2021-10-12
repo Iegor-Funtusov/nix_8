@@ -10,12 +10,8 @@ import java.io.InputStreamReader;
 public class ProgramRun {
 
     public static void run() {
+        preview();
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("if you need first task, please select 1");
-        System.out.println("if you need second task, please select 2");
-        System.out.println("if you need exit task, please select 0");
-        System.out.println("Select you event:");
-        System.out.println();
         String event;
         try {
             while ((event = reader.readLine()) != null) {
@@ -34,5 +30,13 @@ public class ProgramRun {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void preview() {
+        System.out.println("if you need first task, please select 1");
+        System.out.println("if you need second task, please select 2");
+        System.out.println("if you need exit task, please select 0");
+        System.out.println("Select you event:");
+        System.out.println();
     }
 }

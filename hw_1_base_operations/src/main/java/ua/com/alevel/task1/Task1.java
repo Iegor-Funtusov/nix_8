@@ -2,8 +2,6 @@ package ua.com.alevel.task1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class Task1 {
 
