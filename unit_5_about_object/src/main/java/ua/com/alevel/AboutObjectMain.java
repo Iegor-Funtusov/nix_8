@@ -8,17 +8,22 @@ public class AboutObjectMain {
     public static void main(String[] args) {
         System.out.println("AboutObjectMain.main");
 
-        final ImmutableClass immutableClass = new ImmutableClass("1", "1", "1");
-        final RecordClass recordClass = new RecordClass("1", "1", "1");
-
+//        final ImmutableClass immutableClass = new ImmutableClass("1", "1", "1");
+        ImmutableClass immutableClass = new ImmutableClass("1", "1", "1");
         System.out.println("immutableClass = " + immutableClass.getSome1());
+        ImmutableClass immutableClass1 = new ImmutableClass("2", "2", "2");
+        immutableClass = immutableClass1;
+        System.out.println("immutableClass = " + immutableClass.getSome1());
+
+//        final RecordClass recordClass = new RecordClass("1", "1", "1");
+        RecordClass recordClass = new RecordClass("1", "1", "1");
+        System.out.println("recordClass = " + recordClass.some1());
+        RecordClass recordClass1 = new RecordClass("2", "2", "2");
+        recordClass = recordClass1;
         System.out.println("recordClass = " + recordClass.some1());
 
 
-        ImmutableClass immutableClass1 = new ImmutableClass("2", "2", "2");
 
-//        immutableClass = immutableClass1;
-//        System.out.println("immutableClass = " + immutableClass.getSome1());
 
         User user1 = new User();
         user1.setName("name1");
