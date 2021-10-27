@@ -1,5 +1,6 @@
 package ua.com.alevel.config;
 
+import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 
 import ua.com.alevel.db.UserDB;
@@ -34,11 +35,14 @@ public class ObjectFactory {
             for (Class<? extends IFC> iml : imls) {
                 if (ifc.isAssignableFrom(UserDB.class)) {
                     String db = mapProperties.get("db");
-                    if (db.equals("some")) {
-                        return (IFC) SomeUserDB.getInstance();
-                    } else {
-                        return (IFC) UserInMemoryDB.getInstance();
+                    if (StringUtils.isNotEmpty(db)) {
+                        if (db.equals("some")) {
+                            return (IFC) SomeUserDB.getInstance();
+                        } else {
+                            return (IFC) UserInMemoryDB.getInstance();
+                        }
                     }
+                    return (IFC) UserInMemoryDB.getInstance();
                 }
                 if (!iml.isAnnotationPresent(Deprecated.class)) {
                     try {
