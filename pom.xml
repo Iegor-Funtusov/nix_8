@@ -17,6 +17,7 @@
         <module>unit_5_about_object</module>
         <module>dinix_framework</module>
         <module>unit_6_di_oop</module>
+        <module>unit_7_tests_logs</module>
     </modules>
 
     <packaging>pom</packaging>
