@@ -1,0 +1,18 @@
+[
+  {
+    "hight": 100,
+    "width": 150,
+    "carType": {
+      "id": null,
+      "name": "fdlsiauhfasdiy"
+    }
+  },
+  {
+    "hight": 100,
+    "width": 150,
+    "carType": {
+      "id": "fdsafasdfsa",
+      "name": null
+    }
+  }
+]
