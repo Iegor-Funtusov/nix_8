@@ -7,6 +7,8 @@ public class CollectionMain {
 //        for (int i = 0; i < 20; i++) {
 //            listTest.test();
 //        }
-        new MapTest().test();
+//        new MapTest().test();
+//        new SetTest().test();
+        new OptionalTest().test();
     }
 }
