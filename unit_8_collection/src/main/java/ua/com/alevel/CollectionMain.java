@@ -1,5 +1,8 @@
 package ua.com.alevel;
 
+import ua.com.alevel.stream.PointerTest;
+import ua.com.alevel.stream.StreamTest;
+
 public class CollectionMain {
 
     public static void main(String[] args) {
@@ -9,6 +12,8 @@ public class CollectionMain {
 //        }
 //        new MapTest().test();
 //        new SetTest().test();
-        new OptionalTest().test();
+//        new OptionalTest().test();
+//        new StreamTest().run();
+        new PointerTest().test();
     }
 }
