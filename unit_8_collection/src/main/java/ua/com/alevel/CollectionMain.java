@@ -1,5 +1,6 @@
 package ua.com.alevel;
 
+import ua.com.alevel.stream.ParallelTest;
 import ua.com.alevel.stream.PointerTest;
 import ua.com.alevel.stream.StreamTest;
 
@@ -14,6 +15,11 @@ public class CollectionMain {
 //        new SetTest().test();
 //        new OptionalTest().test();
 //        new StreamTest().run();
-        new PointerTest().test();
+//        new PointerTest().test();
+        ParallelTest parallelTest = new ParallelTest();
+        parallelTest.init();
+        parallelTest.test();
+//        for (int i = 0; i < 10; i++) {
+//        }
     }
 }
