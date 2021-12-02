@@ -20,6 +20,7 @@
         <module>unit_7_tests_logs</module>
         <module>unit_8_collection</module>
         <module>unit_9_generics</module>
+        <module>unit_10_ionio</module>
     </modules>
 
     <packaging>pom</packaging>
