@@ -2,6 +2,7 @@ package ua.com.alevel;
 
 import ua.com.alevel.impl.FileIOCrudTest;
 import ua.com.alevel.impl.FileNioCrudTest;
+import ua.com.alevel.json.JsonTest;
 
 public class IoNioMain {
 
@@ -35,7 +36,10 @@ public class IoNioMain {
 //        WriteToFile writeToFile = new WriteToFile();
 //        writeToFile.test(PATH_TO_FILE);
 
-        SerialTest serialTest = new SerialTest();
-        serialTest.test();
+//        SerialTest serialTest = new SerialTest();
+//        serialTest.test();
+
+//        new JsonTest().test();
+        new CsvTest().test();
     }
 }

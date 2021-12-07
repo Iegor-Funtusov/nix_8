@@ -1,0 +1,1 @@
+var user = { id : 10, name: 'name', age: 20 };
