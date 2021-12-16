@@ -21,6 +21,7 @@
         <module>unit_8_collection</module>
         <module>unit_9_generics</module>
         <module>unit_10_ionio</module>
+        <module>unit_11_start_jdbc</module>
     </modules>
 
     <packaging>pom</packaging>
