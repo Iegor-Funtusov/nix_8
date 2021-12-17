@@ -22,9 +22,9 @@ public class UserDaoImpl implements UserDao {
     private static final String UPDATE_USER_QUERY = "update users set first_name = ?, last_name = ?, age = ? where id = ?";
     private static final String DELETE_USER_QUERY = "delete from users where id = ?";
     private static final String EXIST_USER_BY_ID_QUERY = "select count(*) from users where id = ";
-    private static final String EXIST_USER_BY_EMAIL_QUERY = "select count(*) from users where email = ";
+    private static final String EXIST_USER_BY_EMAIL_QUERY = "select count(*) from users where email like ?";
     private static final String SELECT_USER_BY_ID_QUERY = "select * from users where id =  ";
-    private static final String SELECT_USER_BY_EMAIL_QUERY = "select * from users where email =  ";
+    private static final String SELECT_USER_BY_EMAIL_QUERY = "select * from users where email like ?";
     private static final String SELECT_USERS_QUERY = "select * from users";
 
     public UserDaoImpl(JdbcConfig jdbcConfig) {
@@ -34,7 +34,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void create(User user) {
-        try(PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(CREATE_USER_QUERY)) {
+        try (PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(CREATE_USER_QUERY)) {
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getEmail());
@@ -47,7 +47,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void update(User user) {
-        try(PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(UPDATE_USER_QUERY)) {
+        try (PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(UPDATE_USER_QUERY)) {
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setInt(3, user.getAge());
@@ -60,7 +60,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void delete(Integer id) {
-        try(PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(DELETE_USER_QUERY)) {
+        try (PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(DELETE_USER_QUERY)) {
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -71,7 +71,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean existById(Integer id) {
         int count = 0;
-        try(ResultSet resultSet = jdbcConfig.getConnection().createStatement().executeQuery(EXIST_USER_BY_ID_QUERY + id)) {
+        try (ResultSet resultSet = jdbcConfig.getConnection().createStatement().executeQuery(EXIST_USER_BY_ID_QUERY + id)) {
             if (resultSet.next()) {
                 count = resultSet.getInt("count(*)");
             }
@@ -84,9 +84,12 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean existByEmail(String email) {
         int count = 0;
-        try(ResultSet resultSet = jdbcConfig.getConnection().createStatement().executeQuery(EXIST_USER_BY_EMAIL_QUERY + email)) {
-            if (resultSet.next()) {
-                count = resultSet.getInt("count(*)");
+        try (PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(EXIST_USER_BY_EMAIL_QUERY)) {
+            preparedStatement.setString(1, email);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    count = resultSet.getInt("count(*)");
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,7 +99,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findById(Integer id) {
-        try(ResultSet resultSet = jdbcConfig.getConnection().createStatement().executeQuery(SELECT_USER_BY_ID_QUERY + id)) {
+        try (ResultSet resultSet = jdbcConfig.getConnection().createStatement().executeQuery(SELECT_USER_BY_ID_QUERY + id)) {
             if (resultSet.next()) {
                 return initUserByResultSet(resultSet);
             }
@@ -108,9 +111,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findByEmail(String email) {
-        try(ResultSet resultSet = jdbcConfig.getConnection().createStatement().executeQuery(SELECT_USER_BY_EMAIL_QUERY + email)) {
-            if (resultSet.next()) {
-                return initUserByResultSet(resultSet);
+        try (PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(SELECT_USER_BY_EMAIL_QUERY)) {
+            preparedStatement.setString(1, email);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return initUserByResultSet(resultSet);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -121,7 +127,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public DataTableResponse<User> findAll(DataTableRequest request) {
         List<User> users = new ArrayList<>();
-        try(ResultSet resultSet = jdbcConfig.getConnection().createStatement().executeQuery(SELECT_USERS_QUERY)) {
+        try (ResultSet resultSet = jdbcConfig.getConnection().createStatement().executeQuery(SELECT_USERS_QUERY)) {
             while (resultSet.next()) {
                 users.add(initUserByResultSet(resultSet));
             }
@@ -153,7 +159,7 @@ public class UserDaoImpl implements UserDao {
 
     private void initTable() {
         String query = "CREATE SCHEMA IF NOT EXISTS `rest_jdbc` DEFAULT CHARACTER SET utf8;";
-        try(PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(query)) {
+        try (PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(query)) {
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -168,7 +174,7 @@ public class UserDaoImpl implements UserDao {
                 "  PRIMARY KEY (`id`),\n" +
                 "  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE);";
 
-        try(PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(query)) {
+        try (PreparedStatement preparedStatement = jdbcConfig.getConnection().prepareStatement(query)) {
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
