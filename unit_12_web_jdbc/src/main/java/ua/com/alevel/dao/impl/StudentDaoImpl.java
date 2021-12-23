@@ -34,6 +34,11 @@ public class StudentDaoImpl implements StudentDao {
             "         left join students_courses as sc on s.id = sc.student_id \n" +
             "group by s.id";
 
+    private static final String FIND_ALL_VIEW_STUDENT_BY_COURSE_QUERY = "select s.id, s.first_name, s.last_name, count(student_id) as count_of_courses \n" +
+            "from students as s \n" +
+            "         left join students_courses as sc on s.id = sc.student_id where sc.course_id = ? \n" +
+            "group by s.id";
+
     @Override
     public void create(Student entity) {
         try (PreparedStatement ps = storeFactory.getConnection().prepareStatement(CREATE_STUDENT_QUERY)) {
@@ -115,6 +120,22 @@ public class StudentDaoImpl implements StudentDao {
              ResultSet rs = statement.executeQuery(FIND_ALL_VIEW_STUDENT__QUERY)) {
             while (rs.next()) {
                 students.add(convertResultSetToStudentViewDto(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("sql error = " + e.getMessage());
+        }
+        return students;
+    }
+
+    @Override
+    public List<StudentViewDto> findAllPrepareViewByCourse(int id) {
+        List<StudentViewDto> students = new ArrayList<>();
+        try(PreparedStatement ps = storeFactory.getConnection().prepareStatement(FIND_ALL_VIEW_STUDENT_BY_COURSE_QUERY)) {
+            ps.setInt(1, id);
+            try(ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    students.add(convertResultSetToStudentViewDto(rs));
+                }
             }
         } catch (SQLException e) {
             System.out.println("sql error = " + e.getMessage());
