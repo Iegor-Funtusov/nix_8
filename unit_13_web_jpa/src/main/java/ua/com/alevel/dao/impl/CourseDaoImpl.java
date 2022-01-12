@@ -35,6 +35,8 @@ public class CourseDaoImpl implements CourseDao {
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
+        } finally {
+            session.close();
         }
 
 //        session.persist(entity);
@@ -55,6 +57,7 @@ public class CourseDaoImpl implements CourseDao {
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
+        } finally {
             session.close();
         }
     }
