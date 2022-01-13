@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import ua.com.alevel.dao.CourseDao;
 import ua.com.alevel.entity.Course;
 
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,12 +65,48 @@ public class CourseDaoImpl implements CourseDao {
 
     @Override
     public void delete(Integer id) {
-
+        Session session;
+        try {
+            session = sessionFactory.getCurrentSession();
+        } catch (Exception e) {
+            session = sessionFactory.openSession();
+        }
+        Transaction transaction = session.getTransaction();
+        try {
+            transaction.begin();
+            Course course = new Course();
+            course.setId(id);
+            session.delete(course);
+            session.flush();
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public boolean existById(Integer id) {
-        return false;
+        Session session;
+        try {
+            session = sessionFactory.getCurrentSession();
+        } catch (HibernateException e) {
+            session = sessionFactory.openSession();
+        }
+        Query query = session
+                .createQuery("select count(course.id) from Course course where course.id = :id")
+                .setParameter("id", id);
+
+        boolean existById = (Long) query.getSingleResult() == 1;
+
+        try {
+            session.close();
+        } catch (Exception e) {
+            System.out.println("e = " + e.getMessage());
+        }
+
+        return existById;
     }
 
     @Override
@@ -94,6 +131,23 @@ public class CourseDaoImpl implements CourseDao {
 
     @Override
     public List<Course> findAll() {
-        return null;
+        Session session;
+        try {
+            session = sessionFactory.getCurrentSession();
+        } catch (HibernateException e) {
+            session = sessionFactory.openSession();
+        }
+        Query query = session
+                .createQuery("select course from Course course");
+
+        List<Course> courses = (List<Course>) query.getResultList();
+
+        try {
+            session.close();
+        } catch (Exception e) {
+            System.out.println("e = " + e.getMessage());
+        }
+
+        return courses;
     }
 }
