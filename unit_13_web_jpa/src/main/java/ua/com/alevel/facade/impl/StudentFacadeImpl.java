@@ -1,11 +1,16 @@
 package ua.com.alevel.facade.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.WebRequest;
+import ua.com.alevel.datatable.DataTableRequest;
+import ua.com.alevel.datatable.DataTableResponse;
+import ua.com.alevel.dto.PageData;
 import ua.com.alevel.dto.student.StudentRequestDto;
 import ua.com.alevel.dto.student.StudentResponseDto;
 import ua.com.alevel.entity.Student;
 import ua.com.alevel.facade.StudentFacade;
 import ua.com.alevel.service.StudentService;
+import ua.com.alevel.util.WebRequestUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +56,23 @@ public class StudentFacadeImpl implements StudentFacade {
     public List<StudentResponseDto> findAll() {
         List<Student> students = studentService.findAll();
         return students.stream().map(StudentResponseDto::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public PageData<StudentResponseDto> findAll(WebRequest request) {
+        DataTableRequest dataTableRequest = WebRequestUtil.generateDataTableRequest(request);
+        DataTableResponse<Student> dataTableResponse = studentService.findAll(dataTableRequest);
+
+        List<StudentResponseDto> dtos = dataTableResponse.
+                getEntities().
+                stream().
+                map(StudentResponseDto::new).
+                toList();
+        PageData<StudentResponseDto> pageData = new PageData<>(dtos);
+        pageData.setCurrentPage(dataTableRequest.getPage());
+        pageData.setPageSize(dataTableRequest.getSize());
+        pageData.initPageDataState(dataTableResponse);
+        return pageData;
     }
 
     @Override

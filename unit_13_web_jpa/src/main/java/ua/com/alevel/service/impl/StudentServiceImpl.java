@@ -2,6 +2,8 @@ package ua.com.alevel.service.impl;
 
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.StudentDao;
+import ua.com.alevel.datatable.DataTableRequest;
+import ua.com.alevel.datatable.DataTableResponse;
 import ua.com.alevel.entity.Student;
 import ua.com.alevel.exception.EntityExistException;
 import ua.com.alevel.service.StudentService;
@@ -43,6 +45,14 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> findAll() {
         return studentDao.findAll();
+    }
+
+    @Override
+    public DataTableResponse<Student> findAll(DataTableRequest request) {
+        DataTableResponse<Student> dataTableResponse = new DataTableResponse<>();
+        dataTableResponse.setEntities(studentDao.findAll(request));
+        dataTableResponse.setCount(studentDao.count());
+        return dataTableResponse;
     }
 
     private void checkByExist(Integer id) {

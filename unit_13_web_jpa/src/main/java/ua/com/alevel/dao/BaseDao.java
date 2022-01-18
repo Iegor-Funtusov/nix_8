@@ -1,5 +1,6 @@
 package ua.com.alevel.dao;
 
+import ua.com.alevel.datatable.DataTableRequest;
 import ua.com.alevel.entity.BaseEntity;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface BaseDao<ENTITY extends BaseEntity> {
     boolean existById(Integer id);
     Optional<ENTITY> findById(Integer id);
     List<ENTITY> findAll();
+    List<ENTITY> findAll(DataTableRequest request);
+    long count();
 }

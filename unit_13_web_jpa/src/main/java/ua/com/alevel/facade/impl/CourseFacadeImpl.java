@@ -1,6 +1,8 @@
 package ua.com.alevel.facade.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.WebRequest;
+import ua.com.alevel.dto.PageData;
 import ua.com.alevel.dto.cource.CourseRequestDto;
 import ua.com.alevel.dto.cource.CourseResponseDto;
 import ua.com.alevel.entity.Course;
@@ -50,5 +52,10 @@ public class CourseFacadeImpl implements CourseFacade {
                 stream().
                 map(CourseResponseDto::new).
                 collect(Collectors.toList());
+    }
+
+    @Override
+    public PageData<CourseResponseDto> findAll(WebRequest request) {
+        return null;
     }
 }

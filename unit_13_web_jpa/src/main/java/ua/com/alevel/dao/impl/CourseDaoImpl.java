@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 import ua.com.alevel.dao.CourseDao;
+import ua.com.alevel.datatable.DataTableRequest;
 import ua.com.alevel.entity.Course;
 
 import javax.persistence.Query;
@@ -149,5 +150,15 @@ public class CourseDaoImpl implements CourseDao {
         }
 
         return courses;
+    }
+
+    @Override
+    public List<Course> findAll(DataTableRequest request) {
+        return null;
+    }
+
+    @Override
+    public long count() {
+        return 0;
     }
 }

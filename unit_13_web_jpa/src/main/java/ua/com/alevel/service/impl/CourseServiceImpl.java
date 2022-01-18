@@ -2,6 +2,8 @@ package ua.com.alevel.service.impl;
 
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.CourseDao;
+import ua.com.alevel.datatable.DataTableRequest;
+import ua.com.alevel.datatable.DataTableResponse;
 import ua.com.alevel.entity.Course;
 import ua.com.alevel.exception.EntityExistException;
 import ua.com.alevel.service.CourseService;
@@ -44,6 +46,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> findAll() {
         return courseDao.findAll();
+    }
+
+    @Override
+    public DataTableResponse<Course> findAll(DataTableRequest request) {
+        return null;
     }
 
     private void checkByExist(Integer id) {

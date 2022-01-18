@@ -1,5 +1,8 @@
 package ua.com.alevel.facade;
 
+import org.springframework.web.context.request.WebRequest;
+
+import ua.com.alevel.dto.PageData;
 import ua.com.alevel.dto.RequestDto;
 import ua.com.alevel.dto.ResponseDto;
 
@@ -12,4 +15,5 @@ public interface BaseFacade<REQ extends RequestDto, RES extends ResponseDto> {
     void delete(Integer id);
     RES findById(Integer id);
     List<RES> findAll();
+    PageData<RES> findAll(WebRequest request);
 }
