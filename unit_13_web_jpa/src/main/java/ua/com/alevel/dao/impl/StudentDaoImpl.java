@@ -5,16 +5,20 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.alevel.dao.StudentDao;
 import ua.com.alevel.datatable.DataTableRequest;
+import ua.com.alevel.entity.Course;
 import ua.com.alevel.entity.Student;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class StudentDaoImpl implements StudentDao {
@@ -75,19 +79,39 @@ public class StudentDaoImpl implements StudentDao {
         String order = request.getOrder();
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Student> criteriaQuery = criteriaBuilder.createQuery(Student.class);
-        Root<Student> from = criteriaQuery.from(Student.class);
 
-        if (order.equals("desc")) {
-            criteriaQuery.orderBy(criteriaBuilder.desc(from.get(sort)));
+        if (sort.equals("courses")) {
+            CriteriaQuery<Tuple> cq = criteriaBuilder.createTupleQuery();
+            Root<Student> root = cq.from(Student.class);
+            Join<Student, Course> orders = root.join("courses", JoinType.LEFT);
+            cq.select(criteriaBuilder.tuple(root, criteriaBuilder.count(orders)));
+//            cq.where(... add some predicates here ...);
+            cq.groupBy(root.get("id"));
+
+            if (order.equals("desc")) {
+                cq.orderBy(criteriaBuilder.desc(criteriaBuilder.count(orders)));
+            } else {
+                cq.orderBy(criteriaBuilder.asc(criteriaBuilder.count(orders)));
+            }
+
+            List<Tuple> result = entityManager.createQuery(cq)
+                    .setFirstResult(page)
+                    .setMaxResults(size)
+                    .getResultList();
+            return result.stream().map(tuple -> (Student) tuple.get(0)).collect(Collectors.toList());
         } else {
-            criteriaQuery.orderBy(criteriaBuilder.asc(from.get(sort)));
+            CriteriaQuery<Student> criteriaQuery = criteriaBuilder.createQuery(Student.class);
+            Root<Student> root = criteriaQuery.from(Student.class);
+            if (order.equals("desc")) {
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get(sort)));
+            } else {
+                criteriaQuery.orderBy(criteriaBuilder.asc(root.get(sort)));
+            }
+            return entityManager.createQuery(criteriaQuery)
+                    .setFirstResult(page)
+                    .setMaxResults(size)
+                    .getResultList();
         }
-
-        return entityManager.createQuery(criteriaQuery)
-                .setFirstResult(page)
-                .setMaxResults(size)
-                .getResultList();
     }
 
     @Override

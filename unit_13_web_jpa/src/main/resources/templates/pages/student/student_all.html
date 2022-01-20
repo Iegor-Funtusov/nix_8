@@ -2,113 +2,25 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{fragments/data_table_layout}">
 <head>
     <meta charset="utf-8">
     <title>Courses</title>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <span th:text="${'All Students'}"></span>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                        <tr>
-                            <th>id</th>
-                            <th>name</th>
-                            <th>email</th>
-                            <th>count of courses</th>
-                            <th>delete</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="student : ${pageData.getItems()}">
-                            <td th:text="${student.getId()}"></td>
-                            <td th:text="${student.getFullName()}"></td>
-                            <td th:text="${student.getEmail()}"></td>
-                            <td>
-                                <a class="btn btn-info" href="#" role="button" th:href="@{/courses/student/{studentId}(studentId=${student.getId()})}" th:text="${student.getCountOfCourses()}">by course</a>
-                            </td>
-                            <td>
-                                <!--                            <a class="btn btn-danger" href="#" role="button" th:href="@{'/courses/delete/' + ${course.getId()}}">delete</a>-->
-                                <a class="btn btn-danger" href="#" role="button" th:href="@{/students/delete/{id}(id=${student.getId()})}">delete</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <br>
-                    <div class="d-flex justify-content-end align-items-center">
-                        <div class="p-1">Showing [[${pageData.getCurrentShowFromEntries()}]] to [[${pageData.getCurrentShowToEntries()}]] of [[${pageData.getItemsSize()}]] entries</div>
-                        <div class="p-1">
-                            <div class="dropdown dropup">
-                                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span th:text="${pageData.getPageSize()}"></span>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <section th:each="size : ${pageData.getPageSizeItems()}">
-                                        <a class="dropdown-item" href="#" th:onclick="|runPagination(1, ${size}, 0)|" th:text="${size}">@size</a>
-                                    </section>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-1" style="margin-top: 1em !important;">
-                            <ul class="pagination align-middle">
-                                <li class="page-item" th:classappend="${pageData.isShowFirst() ? '' : 'disabled'}">
-                                    <a class="page-link" href="#" th:onclick="|runPagination(1, ${pageData.getPageSize()}, 0)|" title="First Page"><i class="fa fa-fast-backward"></i></a>
-                                </li>
-                                <li class="page-item" th:classappend="${pageData.isShowPrevious() ? '' : 'disabled'}">
-                                    <a class="page-link" href="#" th:onclick="|runPagination(${pageData.getCurrentPage()}, ${pageData.getPageSize()}, -1)|" title="Previous Page"><i class="fa fa-backward"></i></a>
-                                </li>
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="" th:text="${pageData.getCurrentPage()}">@Model.currentPage</a>
-                                </li>
-                                <li class="page-item" th:classappend="${pageData.isShowNext() ? '' : 'disabled'}">
-                                    <a class="page-link" href="#" th:onclick="|runPagination(${pageData.getCurrentPage()}, ${pageData.getPageSize()}, 1)|" title="Next Page"><i class="fa fa-forward"></i></a>
-                                </li>
-                                <li class="page-item" th:classappend="${pageData.isShowLast() ? '' : 'disabled'}">
-                                    <a class="page-link" href="#" th:onclick="|runPagination(${pageData.getTotalPages()}, ${pageData.getPageSize()}, 0)|" title="Last Page"><i class="fa fa-fast-forward"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="p-1">
-                            <a class="page-link btn btn-secondary" href="#" th:onclick="|runPagination(${pageData.getCurrentPage()}, ${pageData.getPageSize()}, 0)|" title="Refresh Page"><i class="fa fa-refresh"></i></a>
-                        </div>
-                        <div class="p-1">
-                            <a class="page-link btn btn-secondary" href="#" onclick="runPagination(1, 10, 0)" title="Reset Page"><i class="fa fa-trash"></i></a>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <a class="btn btn-primary" href="#" role="button" th:href="@{/students/new}">Add new student</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <form method="POST" th:action="@{/students}" id="personalSearch">
-        <input type="submit"
-               id="personalSearchSubmit"
-               style="visibility: hidden"
-        />
-    </form>
-
-    <span th:data-sort="${pageData.getSort()}"
-          th:data-order="${pageData.getOrder()}"
-          th:data-page="${pageData.getCurrentPage()}"
-          th:data-size="${pageData.getPageSize()}"
-          id="pageData">
-    </span>
-
+<div layout:fragment="data_table_content">
+    <tr th:each="student : ${pageData.getItems()}">
+        <td th:text="${student.getId()}"></td>
+        <td th:text="${student.getFirstName()}"></td>
+        <td th:text="${student.getLastName()}"></td>
+        <td th:text="${student.getEmail()}"></td>
+        <td>
+            <a class="btn btn-info" href="#" role="button" th:href="@{/courses/student/{studentId}(studentId=${student.getId()})}" th:text="${student.getCountOfCourses()}">by course</a>
+        </td>
+        <td>
+            <a class="btn btn-danger" href="#" role="button" th:href="@{/students/delete/{id}(id=${student.getId()})}">delete</a>
+        </td>
+    </tr>
 </div>
-
-<th:block layout:fragment="scripts">
-    <script type="text/javascript" th:src="@{/js/pagination.js}"></script>
-</th:block>
-
 </body>
 </html>

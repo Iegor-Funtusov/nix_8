@@ -71,6 +71,8 @@ public class StudentFacadeImpl implements StudentFacade {
         PageData<StudentResponseDto> pageData = new PageData<>(dtos);
         pageData.setCurrentPage(dataTableRequest.getPage());
         pageData.setPageSize(dataTableRequest.getSize());
+        pageData.setSort(dataTableRequest.getSort());
+        pageData.setOrder(dataTableRequest.getOrder());
         pageData.initPageDataState(dataTableResponse);
         return pageData;
     }

@@ -12,13 +12,15 @@ import ua.com.alevel.entity.Student;
 @NoArgsConstructor
 public class StudentResponseDto extends ResponseDto {
 
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private String email;
     private int countOfCourses;
 
     public StudentResponseDto(Student student) {
         super(student.getId());
-        this.fullName = student.getFirstName() + " " + student.getLastName();
+        this.firstName = student.getFirstName();
+        this.lastName = student.getLastName();
         this.email = student.getEmail();
         if (CollectionUtils.isNotEmpty(student.getCourses())) {
             this.countOfCourses = student.getCourses().size();

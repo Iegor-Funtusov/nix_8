@@ -14,11 +14,14 @@ import ua.com.alevel.dto.PageData;
 import ua.com.alevel.dto.student.StudentResponseDto;
 import ua.com.alevel.facade.StudentFacade;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/students")
-public class StudentController {
+public class StudentController extends AbstractController {
 
     private final StudentFacade studentFacade;
 
@@ -26,9 +29,24 @@ public class StudentController {
         this.studentFacade = studentFacade;
     }
 
+    private List<AbstractController.SortData> generateSortDataList(String sort, String order) {
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("id", "id");
+        map.put("firstName", "firstName");
+        map.put("lastName", "lastName");
+        map.put("email", "email");
+        map.put("count of courses", "courses");
+        map.put("delete", null);
+        return generateSortDataList(map, sort, order);
+    }
+
     @GetMapping
     public String findAll(Model model, WebRequest webRequest) {
         PageData<StudentResponseDto> pageData = studentFacade.findAll(webRequest);
+        pageData.setTableName("All Students");
+        pageData.setSearchRequest("/students");
+        pageData.setNewEntityRequest("/students/new");
+        pageData.setSortDataList(generateSortDataList(pageData.getSort(), pageData.getOrder()));
         System.out.println("pageData = " + pageData);
         model.addAttribute("pageData", pageData);
         return "pages/student/student_all";

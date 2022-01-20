@@ -3,6 +3,7 @@ package ua.com.alevel.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ua.com.alevel.controller.AbstractController;
 import ua.com.alevel.datatable.DataTableResponse;
 
 import java.util.List;
@@ -26,6 +27,10 @@ public class PageData<DTO extends ResponseDto> {
     private boolean showLast;
     private String sort;
     private String order;
+    private String tableName;
+    private List<AbstractController.SortData> sortDataList;
+    private String searchRequest;
+    private String newEntityRequest;
 
     public PageData(final List<DTO> items) {
         this.items = items;

@@ -27,14 +27,14 @@ public final class WebRequestUtil {
         if (MapUtils.isEmpty(queryMap)) {
             return dataTableRequest;
         }
-//        final String sort = request.getParameter(SORT_PARAM);
-//        if (StringUtils.isNotBlank(sort)) {
-//            dataTableRequest.setSort(sort);
-//        }
-//        final String order = request.getParameter(ORDER_PARAM);
-//        if (StringUtils.isNotBlank(order)) {
-//            dataTableRequest.setOrder(order);
-//        }
+        final String sort = request.getParameter(SORT_PARAM);
+        if (StringUtils.isNotBlank(sort)) {
+            dataTableRequest.setSort(sort);
+        }
+        final String order = request.getParameter(ORDER_PARAM);
+        if (StringUtils.isNotBlank(order)) {
+            dataTableRequest.setOrder(order);
+        }
         final String page = request.getParameter(PAGE_PARAM);
         if (StringUtils.isNotBlank(page)) {
             dataTableRequest.setPage(Integer.parseInt(page));
