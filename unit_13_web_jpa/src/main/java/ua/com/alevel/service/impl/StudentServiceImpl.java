@@ -1,5 +1,6 @@
 package ua.com.alevel.service.impl;
 
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.StudentDao;
 import ua.com.alevel.datatable.DataTableRequest;
@@ -9,6 +10,7 @@ import ua.com.alevel.exception.EntityExistException;
 import ua.com.alevel.service.StudentService;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -51,7 +53,19 @@ public class StudentServiceImpl implements StudentService {
     public DataTableResponse<Student> findAll(DataTableRequest request) {
         DataTableResponse<Student> dataTableResponse = new DataTableResponse<>();
         dataTableResponse.setEntities(studentDao.findAll(request));
-        dataTableResponse.setCount(studentDao.count());
+        if (MapUtils.isNotEmpty(request.getQueryMap())) {
+            Object o = request.getQueryMap().get("courseId");
+            if (Objects.nonNull(o)) {
+                try {
+                    Integer courseId = (Integer) o;
+                    dataTableResponse.setCount(studentDao.countByCourseId(courseId));
+                } catch (Exception e) {
+                    dataTableResponse.setCount(studentDao.count());
+                }
+            }
+        } else {
+            dataTableResponse.setCount(studentDao.count());
+        }
         return dataTableResponse;
     }
 
@@ -59,10 +73,5 @@ public class StudentServiceImpl implements StudentService {
         if (!studentDao.existById(id)) {
             throw new EntityExistException("entity not found");
         }
-    }
-
-    @Override
-    public List<Student> findByCourseId(Integer courseId) {
-        return studentDao.findByCourseId(courseId);
     }
 }

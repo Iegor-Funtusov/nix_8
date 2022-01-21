@@ -12,7 +12,9 @@ import ua.com.alevel.facade.StudentFacade;
 import ua.com.alevel.service.StudentService;
 import ua.com.alevel.util.WebRequestUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,8 +80,25 @@ public class StudentFacadeImpl implements StudentFacade {
     }
 
     @Override
-    public List<StudentResponseDto> findByCourseId(Integer courseId) {
-        List<Student> students = studentService.findByCourseId(courseId);
-        return students.stream().map(StudentResponseDto::new).collect(Collectors.toList());
+    public PageData<StudentResponseDto> findAllByCourseId(Integer courseId, WebRequest request) {
+        DataTableRequest dataTableRequest = WebRequestUtil.generateDataTableRequest(request);
+        Map<String, Object> queryMap = new HashMap<>();
+        queryMap.put("courseId", courseId);
+        dataTableRequest.setQueryMap(queryMap);
+//        DataTableResponse<Student> dataTableResponse = studentService.findAllByCourseId(courseId, dataTableRequest);
+        DataTableResponse<Student> dataTableResponse = studentService.findAll(dataTableRequest);
+
+        List<StudentResponseDto> dtos = dataTableResponse.
+                getEntities().
+                stream().
+                map(StudentResponseDto::new).
+                toList();
+        PageData<StudentResponseDto> pageData = new PageData<>(dtos);
+        pageData.setCurrentPage(dataTableRequest.getPage());
+        pageData.setPageSize(dataTableRequest.getSize());
+        pageData.setSort(dataTableRequest.getSort());
+        pageData.setOrder(dataTableRequest.getOrder());
+        pageData.initPageDataState(dataTableResponse);
+        return pageData;
     }
 }

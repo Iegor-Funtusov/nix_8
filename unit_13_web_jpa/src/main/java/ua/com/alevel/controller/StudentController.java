@@ -14,7 +14,6 @@ import ua.com.alevel.dto.PageData;
 import ua.com.alevel.dto.student.StudentResponseDto;
 import ua.com.alevel.facade.StudentFacade;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +42,7 @@ public class StudentController extends AbstractController {
     @GetMapping
     public String findAll(Model model, WebRequest webRequest) {
         PageData<StudentResponseDto> pageData = studentFacade.findAll(webRequest);
-        pageData.setTableName("All Students");
-        pageData.setSearchRequest("/students");
-        pageData.setNewEntityRequest("/students/new");
-        pageData.setSortDataList(generateSortDataList(pageData.getSort(), pageData.getOrder()));
-        System.out.println("pageData = " + pageData);
-        model.addAttribute("pageData", pageData);
-        return "pages/student/student_all";
+        return initPageDataAndReturnStudentsPage(pageData, model);
     }
 
     @PostMapping
@@ -62,8 +55,17 @@ public class StudentController extends AbstractController {
     }
 
     @GetMapping("/course/{courseId}")
-    public String findAll(Model model, @PathVariable Integer courseId) {
-        model.addAttribute("students", studentFacade.findByCourseId(courseId));
+    public String findAll(Model model, @PathVariable Integer courseId, WebRequest webRequest) {
+        PageData<StudentResponseDto> pageData = studentFacade.findAllByCourseId(courseId, webRequest);
+        pageData.setNewEntityRequest("/students/new");
+        return initPageDataAndReturnStudentsPage(pageData, model);
+    }
+
+    private String initPageDataAndReturnStudentsPage(PageData<StudentResponseDto> pageData, Model model) {
+        pageData.setTableName("All Students");
+        pageData.setSearchRequest("/students");
+        pageData.setSortDataList(generateSortDataList(pageData.getSort(), pageData.getOrder()));
+        model.addAttribute("pageData", pageData);
         return "pages/student/student_all";
     }
 }

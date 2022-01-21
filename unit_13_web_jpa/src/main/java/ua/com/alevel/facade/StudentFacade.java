@@ -1,11 +1,11 @@
 package ua.com.alevel.facade;
 
+import org.springframework.web.context.request.WebRequest;
+import ua.com.alevel.dto.PageData;
 import ua.com.alevel.dto.student.StudentRequestDto;
 import ua.com.alevel.dto.student.StudentResponseDto;
 
-import java.util.List;
-
 public interface StudentFacade extends BaseFacade<StudentRequestDto, StudentResponseDto> {
 
-    List<StudentResponseDto> findByCourseId(Integer courseId);
+    PageData<StudentResponseDto> findAllByCourseId(Integer courseId, WebRequest webRequest);
 }

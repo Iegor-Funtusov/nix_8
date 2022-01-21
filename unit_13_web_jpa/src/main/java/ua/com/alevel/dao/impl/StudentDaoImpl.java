@@ -1,5 +1,6 @@
 package ua.com.alevel.dao.impl;
 
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +14,11 @@ import javax.persistence.Query;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,40 +81,31 @@ public class StudentDaoImpl implements StudentDao {
         String sort = request.getSort();
         String order = request.getOrder();
 
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<Student> root = cq.from(Student.class);
+        Join<Student, Course> join = root.join("courses", JoinType.LEFT);
+        cq.select(cb.tuple(root, cb.count(join)));
+        boolean isNotEmptyMap = MapUtils.isNotEmpty(request.getQueryMap());
+        if (isNotEmptyMap) {
+            Integer courseId = (Integer) request.getQueryMap().get("courseId");
+            cq.where(cb.equal(join.get("id"), courseId));
 
-        if (sort.equals("courses")) {
-            CriteriaQuery<Tuple> cq = criteriaBuilder.createTupleQuery();
-            Root<Student> root = cq.from(Student.class);
-            Join<Student, Course> orders = root.join("courses", JoinType.LEFT);
-            cq.select(criteriaBuilder.tuple(root, criteriaBuilder.count(orders)));
-//            cq.where(... add some predicates here ...);
-            cq.groupBy(root.get("id"));
-
-            if (order.equals("desc")) {
-                cq.orderBy(criteriaBuilder.desc(criteriaBuilder.count(orders)));
-            } else {
-                cq.orderBy(criteriaBuilder.asc(criteriaBuilder.count(orders)));
-            }
-
-            List<Tuple> result = entityManager.createQuery(cq)
-                    .setFirstResult(page)
-                    .setMaxResults(size)
-                    .getResultList();
-            return result.stream().map(tuple -> (Student) tuple.get(0)).collect(Collectors.toList());
-        } else {
-            CriteriaQuery<Student> criteriaQuery = criteriaBuilder.createQuery(Student.class);
-            Root<Student> root = criteriaQuery.from(Student.class);
-            if (order.equals("desc")) {
-                criteriaQuery.orderBy(criteriaBuilder.desc(root.get(sort)));
-            } else {
-                criteriaQuery.orderBy(criteriaBuilder.asc(root.get(sort)));
-            }
-            return entityManager.createQuery(criteriaQuery)
-                    .setFirstResult(page)
-                    .setMaxResults(size)
-                    .getResultList();
         }
+        cq.groupBy(root.get("id"));
+        Expression<?> orderBy = "courses".equals(sort) ? cb.count(join) : root.get(sort);
+        if (order.equals("desc")) {
+            cq.orderBy(cb.desc(orderBy));
+        } else {
+            cq.orderBy(cb.asc(orderBy));
+        }
+        List<Tuple> result = entityManager.createQuery(cq)
+                .setFirstResult(page)
+                .setMaxResults(size)
+                .getResultList();
+        return result.stream()
+                .map(tuple -> (Student) tuple.get(0))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -124,11 +118,9 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Student> findByCourseId(Integer courseId) {
-        List<Integer> ids = List.of(courseId);
-        return (List<Student>) entityManager
-                .createQuery("select student from Student as student join student.courses as courses where courses.id in :ids")
-                .setParameter("ids", ids)
-                .getResultList();
+    public long countByCourseId(Integer courseId) {
+        Query query = entityManager
+                .createQuery("select count(student) from Student as student join student.courses as courses where courses.id = :courseId");
+        return (Long) query.setParameter("courseId", courseId).getSingleResult();
     }
 }
