@@ -1,6 +1,8 @@
 package ua.com.alevel.service.impl;
 
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Service;
+
 import ua.com.alevel.dao.CourseDao;
 import ua.com.alevel.datatable.DataTableRequest;
 import ua.com.alevel.datatable.DataTableResponse;
@@ -9,7 +11,7 @@ import ua.com.alevel.exception.EntityExistException;
 import ua.com.alevel.service.CourseService;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -50,7 +52,21 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public DataTableResponse<Course> findAll(DataTableRequest request) {
-        return null;
+        DataTableResponse<Course> dataTableResponse = new DataTableResponse<>();
+        dataTableResponse.setEntities(courseDao.findAll(request));
+        dataTableResponse.setCount(courseDao.count());
+        if (MapUtils.isNotEmpty(request.getQueryMap())) {
+            Object o = request.getQueryMap().get("studentId");
+            if (Objects.nonNull(o)) {
+                try {
+                    Integer studentId = (Integer) o;
+                    dataTableResponse.setCount(courseDao.countByStudentId(studentId));
+                } catch (Exception e) {
+                    dataTableResponse.setCount(courseDao.count());
+                }
+            }
+        }
+        return dataTableResponse;
     }
 
     private void checkByExist(Integer id) {

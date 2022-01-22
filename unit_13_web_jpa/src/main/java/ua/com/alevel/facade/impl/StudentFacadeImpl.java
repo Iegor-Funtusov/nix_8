@@ -2,13 +2,16 @@ package ua.com.alevel.facade.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.WebRequest;
+
 import ua.com.alevel.datatable.DataTableRequest;
 import ua.com.alevel.datatable.DataTableResponse;
 import ua.com.alevel.dto.PageData;
 import ua.com.alevel.dto.student.StudentRequestDto;
 import ua.com.alevel.dto.student.StudentResponseDto;
+import ua.com.alevel.entity.Course;
 import ua.com.alevel.entity.Student;
 import ua.com.alevel.facade.StudentFacade;
+import ua.com.alevel.service.CourseService;
 import ua.com.alevel.service.StudentService;
 import ua.com.alevel.util.WebRequestUtil;
 
@@ -21,9 +24,13 @@ import java.util.stream.Collectors;
 public class StudentFacadeImpl implements StudentFacade {
 
     private final StudentService studentService;
+    private final CourseService courseService;
 
-    public StudentFacadeImpl(StudentService studentService) {
+    public StudentFacadeImpl(
+            StudentService studentService,
+            CourseService courseService) {
         this.studentService = studentService;
+        this.courseService = courseService;
     }
 
     @Override
@@ -32,7 +39,9 @@ public class StudentFacadeImpl implements StudentFacade {
         student.setEmail(studentRequestDto.getEmail());
         student.setFirstName(studentRequestDto.getFirstName());
         student.setLastName(studentRequestDto.getLastName());
-        studentService.create(student);
+        Course course = courseService.findById(studentRequestDto.getCourseId());
+        course.getStudents().add(student);
+        courseService.update(course);
     }
 
     @Override
@@ -64,7 +73,6 @@ public class StudentFacadeImpl implements StudentFacade {
     public PageData<StudentResponseDto> findAll(WebRequest request) {
         DataTableRequest dataTableRequest = WebRequestUtil.generateDataTableRequest(request);
         DataTableResponse<Student> dataTableResponse = studentService.findAll(dataTableRequest);
-
         List<StudentResponseDto> dtos = dataTableResponse.
                 getEntities().
                 stream().
@@ -85,9 +93,7 @@ public class StudentFacadeImpl implements StudentFacade {
         Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("courseId", courseId);
         dataTableRequest.setQueryMap(queryMap);
-//        DataTableResponse<Student> dataTableResponse = studentService.findAllByCourseId(courseId, dataTableRequest);
         DataTableResponse<Student> dataTableResponse = studentService.findAll(dataTableRequest);
-
         List<StudentResponseDto> dtos = dataTableResponse.
                 getEntities().
                 stream().

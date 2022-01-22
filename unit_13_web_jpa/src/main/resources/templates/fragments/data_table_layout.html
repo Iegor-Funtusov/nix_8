@@ -83,7 +83,7 @@
                             <a class="page-link btn btn-secondary" href="#" onclick="runPagination(1, 10, 0)" title="Reset Page"><i class="fa fa-trash"></i></a>
                         </div>
                     </div>
-                    <div class="card-footer">
+                    <div th:if="${pageData.getNewEntityRequest() != null}" class="card-footer">
                         <a class="btn btn-primary" href="#" role="button" th:href="@{${pageData.getNewEntityRequest()}}">Add new</a>
                     </div>
                 </div>

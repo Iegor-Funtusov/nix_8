@@ -18,6 +18,9 @@
             <a class="btn btn-info" href="#" role="button" th:href="@{/courses/student/{studentId}(studentId=${student.getId()})}" th:text="${student.getCountOfCourses()}">by course</a>
         </td>
         <td>
+            <a class="btn btn-info" href="#" role="button" th:href="@{/students/details/{id}(id=${student.getId()})}">details</a>
+        </td>
+        <td>
             <a class="btn btn-danger" href="#" role="button" th:href="@{/students/delete/{id}(id=${student.getId()})}">delete</a>
         </td>
     </tr>

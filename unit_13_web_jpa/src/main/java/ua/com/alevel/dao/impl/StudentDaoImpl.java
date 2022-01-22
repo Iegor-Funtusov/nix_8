@@ -4,6 +4,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+
 import ua.com.alevel.dao.StudentDao;
 import ua.com.alevel.datatable.DataTableRequest;
 import ua.com.alevel.entity.Course;
@@ -47,16 +48,20 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void delete(Integer id) {
-        entityManager.remove(id);
+        entityManager.createQuery("delete from Student as student " +
+                        "where student.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 
     @Override
     @Transactional(readOnly = true)
     public boolean existById(Integer id) {
         Query query = entityManager
-                .createQuery("select count(student.id) from Student student where student.id = :id")
+                .createQuery("select count(student.id) from Student student " +
+                        "where student.id = :id")
                 .setParameter("id", id);
-        return (Integer) query.getSingleResult() == 1;
+        return (Long) query.getSingleResult() == 1;
     }
 
     @Override
@@ -90,7 +95,6 @@ public class StudentDaoImpl implements StudentDao {
         if (isNotEmptyMap) {
             Integer courseId = (Integer) request.getQueryMap().get("courseId");
             cq.where(cb.equal(join.get("id"), courseId));
-
         }
         cq.groupBy(root.get("id"));
         Expression<?> orderBy = "courses".equals(sort) ? cb.count(join) : root.get(sort);
@@ -120,7 +124,9 @@ public class StudentDaoImpl implements StudentDao {
     @Transactional(readOnly = true)
     public long countByCourseId(Integer courseId) {
         Query query = entityManager
-                .createQuery("select count(student) from Student as student join student.courses as courses where courses.id = :courseId");
+                .createQuery("select count(student) from Student as student " +
+                        "join student.courses as courses " +
+                        "where courses.id = :courseId");
         return (Long) query.setParameter("courseId", courseId).getSingleResult();
     }
 }

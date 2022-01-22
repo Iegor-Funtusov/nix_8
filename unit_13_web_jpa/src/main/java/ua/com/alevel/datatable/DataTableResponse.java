@@ -2,6 +2,7 @@ package ua.com.alevel.datatable;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import ua.com.alevel.entity.BaseEntity;
 
 import java.util.List;

@@ -2,6 +2,7 @@ package ua.com.alevel.service.impl;
 
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Service;
+
 import ua.com.alevel.dao.StudentDao;
 import ua.com.alevel.datatable.DataTableRequest;
 import ua.com.alevel.datatable.DataTableResponse;
@@ -53,6 +54,7 @@ public class StudentServiceImpl implements StudentService {
     public DataTableResponse<Student> findAll(DataTableRequest request) {
         DataTableResponse<Student> dataTableResponse = new DataTableResponse<>();
         dataTableResponse.setEntities(studentDao.findAll(request));
+        dataTableResponse.setCount(studentDao.count());
         if (MapUtils.isNotEmpty(request.getQueryMap())) {
             Object o = request.getQueryMap().get("courseId");
             if (Objects.nonNull(o)) {
@@ -63,8 +65,6 @@ public class StudentServiceImpl implements StudentService {
                     dataTableResponse.setCount(studentDao.count());
                 }
             }
-        } else {
-            dataTableResponse.setCount(studentDao.count());
         }
         return dataTableResponse;
     }
