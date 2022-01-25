@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="utf-8">
+    <title>Course Details</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-2 mt-2">
+                <div class="card-header">
+                    Course Details
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>id</th>
+                            <td th:text="${course.getId()}"></td>
+                        </tr>
+                        <tr>
+                            <th>name</th>
+                            <td th:text="${course.getName()}"></td>
+                        </tr>
+                    </table>
+                    <div class="mt-2 mb-2">
+                        <div class="btn-group">
+                            <a class="btn" th:href="@{'/courses/update/' + ${course.getId()}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="mt-2 mb-2">
+                        <div class="btn-group">
+                            <a class="btn" th:href="@{'/students/course/' + ${course.getId()} + '/new'}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

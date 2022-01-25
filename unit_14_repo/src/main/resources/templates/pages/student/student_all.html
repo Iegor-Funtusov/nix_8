@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/data_table_layout}">
+<head>
+    <meta charset="utf-8">
+    <title>Courses</title>
+</head>
+<body>
+<div layout:fragment="data_table_content">
+    <tr th:each="student : ${pageData.getItems()}">
+        <td th:text="${student.getId()}"></td>
+        <td th:text="${student.getFirstName()}"></td>
+        <td th:text="${student.getLastName()}"></td>
+        <td th:text="${student.getEmail()}"></td>
+        <td>
+            <a class="btn btn-info" href="#" role="button" th:href="@{/courses/student/{studentId}(studentId=${student.getId()})}" th:text="${student.getCountOfCourses()}">by course</a>
+        </td>
+        <td>
+            <a class="btn btn-info" href="#" role="button" th:href="@{/students/details/{id}(id=${student.getId()})}">details</a>
+        </td>
+        <td>
+            <a class="btn btn-danger" href="#" role="button" th:href="@{/students/delete/{id}(id=${student.getId()})}">delete</a>
+        </td>
+    </tr>
+</div>
+</body>
+</html>
