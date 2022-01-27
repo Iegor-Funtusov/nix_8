@@ -22,6 +22,7 @@
         <module>unit_9_generics</module>
         <module>unit_10_ionio</module>
         <module>unit_11_start_jdbc</module>
+        <module>unit_15_clean_spring</module>
     </modules>
 
     <packaging>pom</packaging>
