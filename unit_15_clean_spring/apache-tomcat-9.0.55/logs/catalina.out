@@ -749,3 +749,16 @@ NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED -
 27-Jan-2022 16:59:05.061 INFO [main] org.apache.catalina.startup.HostConfig.deployWAR Deployment of web application archive [/Users/egorfuntusov/Projects/A-Level/Nix/nix_8/unit_15_clean_spring/apache-tomcat-9.0.55/webapps/cleanspring.war] has finished in [2 641] ms
 27-Jan-2022 16:59:05.063 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
 27-Jan-2022 16:59:05.074 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [2675] milliseconds
+27-Jan-2022 17:10:09.700 INFO [main] org.apache.catalina.core.StandardServer.await A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+27-Jan-2022 17:10:09.700 INFO [main] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["http-nio-8080"]
+27-Jan-2022 17:10:09.701 INFO [main] org.apache.catalina.core.StandardService.stopInternal Stopping service [Catalina]
+27-Jan-2022 17:10:09.719 WARNING [main] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesJdbc The web application [cleanspring] registered the JDBC driver [com.mysql.cj.jdbc.Driver] but failed to unregister it when the web application was stopped. To prevent a memory leak, the JDBC Driver has been forcibly unregistered.
+27-Jan-2022 17:10:09.720 WARNING [main] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesThreads The web application [cleanspring] appears to have started a thread named [mysql-cj-abandoned-connection-cleanup] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.1/java.lang.Object.wait(Native Method)
+ java.base@17.0.1/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+ com.mysql.cj.jdbc.AbandonedConnectionCleanupThread.run(AbandonedConnectionCleanupThread.java:91)
+ java.base@17.0.1/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+ java.base@17.0.1/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.1/java.lang.Thread.run(Thread.java:833)
+27-Jan-2022 17:10:09.722 INFO [main] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["http-nio-8080"]
+27-Jan-2022 17:10:09.725 INFO [main] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["http-nio-8080"]
