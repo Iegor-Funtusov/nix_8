@@ -3,8 +3,10 @@ package ua.com.alevel.final_project.facade.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.WebRequest;
+import ua.com.alevel.final_project.config.annotation.InjectLog;
 import ua.com.alevel.final_project.exception.BadRequestException;
 import ua.com.alevel.final_project.facade.PLPFacade;
+import ua.com.alevel.final_project.logger.AppLogger;
 import ua.com.alevel.final_project.persistence.entity.books.Book;
 import ua.com.alevel.final_project.service.PLPService;
 import ua.com.alevel.final_project.util.WebUtil;
@@ -14,8 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ua.com.alevel.final_project.logger.AppLoggerLevel.INFO;
+
 @Service
 public class PLPFacadeImpl implements PLPFacade {
+
+    @InjectLog
+    private AppLogger logger;
 
     private final PLPService plpService;
 
@@ -33,7 +40,7 @@ public class PLPFacadeImpl implements PLPFacade {
             }
             Long publisherId = Long.parseLong(params[0]);
             queryMap.put(WebUtil.PUBLISHER_PARAM, publisherId);
-//            loggerService.commit(LoggerLevel.INFO, "add " + WebUtil.PUBLISHER_PARAM + ": " + publisherId);
+            logger.log("search by " + WebUtil.PUBLISHER_PARAM + ": " + publisherId, INFO);
         }
         if (webRequest.getParameterMap().get(WebUtil.SEARCH_BOOK_PARAM) != null) {
             String[] params = webRequest.getParameterMap().get(WebUtil.SEARCH_BOOK_PARAM);

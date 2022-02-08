@@ -7,6 +7,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,6 +25,9 @@ public abstract class BaseEntity implements Serializable {
     private Date updated;
 
     private Boolean visible;
+
+//    @Version
+//    private Integer version;
 
     public BaseEntity() {
         this.created = new Date();

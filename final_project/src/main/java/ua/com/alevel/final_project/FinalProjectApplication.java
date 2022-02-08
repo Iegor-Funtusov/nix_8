@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ua.com.alevel.final_project.persistence.entity.user.Admin;
 import ua.com.alevel.final_project.persistence.repository.user.AdminRepository;
 
-@EnableScheduling
+//@EnableScheduling
 @SpringBootApplication
 public class FinalProjectApplication {
 
