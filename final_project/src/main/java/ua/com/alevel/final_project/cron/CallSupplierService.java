@@ -27,7 +27,7 @@ public class CallSupplierService {
         this.bookRepository = bookRepository;
     }
 
-    @Scheduled(fixedDelay = 60000)
+//    @Scheduled(fixedDelay = 60000)
     public void callSupplier() {
         System.out.println("CallSupplierService.callSupplier");
 

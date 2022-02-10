@@ -10,4 +10,19 @@ $(document).ready(function () {
             }
         }
     );
+    $("#btnBookSearch").click(function () {
+        const inputText = $("#bookNamed").val();
+        if (inputText.length === 0) {
+            alert("Enter product name or description");
+        } else {
+            let bookSearch = document.getElementById('bookSearch');
+            if (bookSearch) {
+                let input = document.createElement("input");
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", "bookSearch");
+                input.setAttribute("value", inputText);
+                bookSearch.appendChild(input);
+            }
+        }
+    });
 })
