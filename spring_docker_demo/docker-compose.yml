@@ -1,0 +1,22 @@
+version: "3"
+services:
+  spring_docker_demo:
+    image: spring_docker_demo
+    ports:
+      - "8082:8085"
+    networks:
+      - mysql_docker_demo
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: mysql/mysql-server:latest
+    container_name: mysqldb
+    networks:
+      - mysql_docker_demo
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=nix_8_db
+
+networks:
+  mysql_docker_demo:

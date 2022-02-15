@@ -1,0 +1,9 @@
+docker images
+docker build -t spring_docker_demo .
+docker image rm spring_docker_demo
+docker container run --name spring_docker_demo_container -p 8080:8080 -d spring_docker_demo
+
+docker ps
+docker logs {CONTAINER_ID}
+docker stop {CONTAINER_ID}
+docker rm {CONTAINER_ID}
