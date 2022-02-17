@@ -44,6 +44,15 @@ public final class WebUtil {
         return dataTableRequest;
     }
 
+    public static DataTableRequest generateDefaultDataTableRequest() {
+        DataTableRequest dataTableRequest = new DataTableRequest();
+        dataTableRequest.setOrder(DEFAULT_ORDER_PARAM_VALUE);
+        dataTableRequest.setSort(DEFAULT_SORT_PARAM_VALUE);
+        dataTableRequest.setSize(DEFAULT_SIZE_PARAM_VALUE);
+        dataTableRequest.setPage(DEFAULT_PAGE_PARAM_VALUE);
+        return dataTableRequest;
+    }
+
     public static PageData<? extends ResponseDto> initPageData(
             DataTableResponse<? extends BaseEntity> tableResponse) {
         PageData<? extends ResponseDto> pageData = new PageData<>();
